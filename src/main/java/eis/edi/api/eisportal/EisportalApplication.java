@@ -8,6 +8,7 @@ public class EisportalApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EisportalApplication.class, args);
+		
 	}
 
 }
