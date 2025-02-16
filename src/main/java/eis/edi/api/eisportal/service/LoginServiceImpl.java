@@ -1,8 +1,10 @@
 package eis.edi.api.eisportal.service;
 
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import eis.edi.api.eisportal.dto.LoginRequest;
@@ -10,6 +12,16 @@ import eis.edi.api.eisportal.dto.LoginResponse;
 
 @Service
 public class LoginServiceImpl implements LoginService{
+
+    String loginQuery = """
+            select unique_id 'uniqueId',user_email 'userEmail',user_name 'userName',password
+            from eistest.eis_tb_users
+            where user_name = ?
+            and password = ?
+            """;;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private static final String FAILURERESPCODE = "1";
     private static final String FAILURERESPTYPE = "Failure";
@@ -42,14 +54,22 @@ public class LoginServiceImpl implements LoginService{
             }
             else 
             {
-                Map<String,Object> loginDtls = new LinkedHashMap<String,Object>();
-                loginDtls.put("user", userName);
-                loginDtls.put("client", "cambria");
+                List<Map<String,Object>> loginList = jdbcTemplate.queryForList(loginQuery,new Object[]{userName,password});
 
-                respDtls.setResponseCode(SUCCESSRESPCODE);
-                respDtls.setResponseType(SUCCESSRESPTYPE);
-                respDtls.setResponseMessage("Login Successfully");
-                respDtls.setLoginDtls(loginDtls);
+
+                if(loginList != null && !loginList.isEmpty())
+                {
+                    respDtls.setResponseCode(SUCCESSRESPCODE);
+                    respDtls.setResponseType(SUCCESSRESPTYPE);
+                    respDtls.setResponseMessage("Login Successfully");
+                    respDtls.setLoginDtls(loginList);
+                }
+                else
+                {
+                    respDtls.setResponseCode(FAILURERESPCODE);
+                    respDtls.setResponseType(FAILURERESPTYPE);
+                    respDtls.setResponseMessage("Invalid Login");
+                }
             }
 
         }

@@ -3,7 +3,7 @@ package eis.edi.api.eisportal.dto;
 import lombok.Data;
 
 @Data
-public class GetOutboundRequest {
+public class GetClientRequest {
 
-    private int clientTpid;
+    private int uniqueId;
 }

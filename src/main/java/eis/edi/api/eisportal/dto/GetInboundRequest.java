@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class GetInboundRequest {
 
-    private String userName;
-    private String client;
+    private int clientTpid;
     
 }

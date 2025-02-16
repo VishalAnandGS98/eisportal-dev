@@ -20,7 +20,7 @@ public class LoginController {
     private LoginService loginServ;
 
     @CrossOrigin(origins = "*") 
-    @PostMapping(value ="login",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value ="v1/login",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public LoginResponse loginResp(@RequestBody LoginRequest reqDtls)
     {
        return  loginServ.loginResp(reqDtls);

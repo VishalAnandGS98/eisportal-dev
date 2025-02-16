@@ -20,7 +20,7 @@ public class GetInboundController {
     private GetInboundService inBoundServ;
 
     @CrossOrigin(origins = "*") 
-    @PostMapping(value ="inBoundMsg",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value ="v1/inBoundMsg",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public GetInboundResponse inResp(@RequestBody GetInboundRequest reqDtls)
     {
        return  inBoundServ.inResp(reqDtls);

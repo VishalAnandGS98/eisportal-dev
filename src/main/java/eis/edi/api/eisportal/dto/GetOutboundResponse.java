@@ -1,5 +1,6 @@
 package eis.edi.api.eisportal.dto;
 
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,5 +16,5 @@ public class GetOutboundResponse {
     private String responseMessage;
 
     @JsonInclude(Include.NON_NULL)
-    private Map<String,Object> outboundDtls;
+    private List<Map<String,Object>> outboundDtls;
 }

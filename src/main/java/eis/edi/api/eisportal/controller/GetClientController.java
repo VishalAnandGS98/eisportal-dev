@@ -8,21 +8,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import eis.edi.api.eisportal.dto.GetOutboundRequest;
-import eis.edi.api.eisportal.dto.GetOutboundResponse;
-import eis.edi.api.eisportal.service.GetOutboundService;
+import eis.edi.api.eisportal.dto.GetClientRequest;
+import eis.edi.api.eisportal.dto.GetClientResponse;
+import eis.edi.api.eisportal.service.GetClientService;
+
 
 @RestController
 @RequestMapping("api")
-public class GetOutboundController {
+public class GetClientController {
 
-     @Autowired
-    private GetOutboundService outBoundServ;
+    @Autowired
+    private GetClientService clientServ;
 
     @CrossOrigin(origins = "*") 
-    @PostMapping(value ="v1/outBoundMsg",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public GetOutboundResponse inResp(@RequestBody GetOutboundRequest reqDtls)
+    @PostMapping(value ="v1/userClient",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    public GetClientResponse loginResp(@RequestBody GetClientRequest reqDtls)
     {
-       return outBoundServ.outResp(reqDtls);
+       return  clientServ.loginResp(reqDtls);
     }
+
 }
