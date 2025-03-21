@@ -14,23 +14,15 @@ import eis.edi.api.eisportal.dto.GetInboundResponse;
 public class GetInboundServiceImpl implements GetInboundService{
 
      String inBoundQuery = """
-     select 
-
-pr.name 'receiver', ps.name 'sender', 
-dd.type, 
-ddt.description, 
-dd.reference,
-dd.ack,
-de.message, 
---cast(cast( b.content as varbinary(max)) as varchar(max)), 
-det.description, 
-det.event_type 'eventType', 
-de2.message 'transmission', 
-de3.message 'ackStatus'  ,
-de.ts 'ediCreatedtTme',
-de2.ts 'transmissionTime',
-de3.ts 'ackTime'
---, de.event_id, de.mid, de.envid, dd.reference, dd.timestamp 
+select  
+ps.name 'Sender', 
+pr.name 'Receiver', 
+dd.reference,		
+dd.type,
+ddt.description,
+dd.timestamp,  
+de2.message 'Map used', 
+de3.message 'Ack Trans Status'
 from eistest.eis_tb_DTSDocuments dd 
   inner join
   eistest.eis_tb_partners pr
@@ -41,9 +33,11 @@ from eistest.eis_tb_DTSDocuments dd
   inner join
   eistest.eis_tb_dtsevents de
   on de.envid = dd.envid
+  
   inner join
   eistest.eis_tb_DTSEventTypes det
   on det.event_type = de.event
+    
   inner join
   eistest.eis_tb_batches b
   on b.BatchID = de.mid
@@ -51,9 +45,13 @@ from eistest.eis_tb_DTSDocuments dd
   eistest.eis_tb_DTSDocTypes ddt
 on ddt.doctype = dd.type
 left join eistest.eis_tb_dtsevents de2
-on (de.envid = de2.envid and de2.event = 6)
+on (de.envid = de2.envid and de2.event = 7)
 left join eistest.eis_tb_dtsevents de3
 on (de.envid = de3.envid and de3.event = 20)
+
+where 
+ 
+ dd.type in ( '850', '875', '820', '844', '945', '856', '852', '867') and pr.tpid = ? and de.event = 1
             """;
 
     @Autowired
@@ -82,7 +80,7 @@ on (de.envid = de3.envid and de3.event = 20)
             }
             else 
             {
-                List<Map<String,Object>> inBoundList = jdbcTemplate.queryForList(inBoundQuery);
+                List<Map<String,Object>> inBoundList = jdbcTemplate.queryForList(inBoundQuery,new Object[]{clientTpid});
 
                 if(inBoundList != null && !inBoundList.isEmpty())
                 {

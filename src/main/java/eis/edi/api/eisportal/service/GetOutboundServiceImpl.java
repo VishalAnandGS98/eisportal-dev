@@ -15,9 +15,10 @@ public class GetOutboundServiceImpl implements GetOutboundService{
 
     
      String outBoundQuery = """
-   select 
-
-pr.name 'receiver', ps.name 'sender', 
+  
+select 
+pr.name 'Receiver', 
+ps.name 'Sender', 
 dd.type, 
 ddt.description, 
 dd.reference,
@@ -25,12 +26,12 @@ dd.ack,
 de.message, 
 --cast(cast( b.content as varbinary(max)) as varchar(max)), 
 det.description, 
-det.event_type 'eventType', 
-de2.message 'transmission', 
-de3.message 'ackStatus'  ,
-de.ts 'ediCreatedtTme',
-de2.ts 'transmissionTime',
-de3.ts 'ackTime'
+det.event_type, 
+de2.message 'Transmission', 
+de3.message 'ACK status'  ,
+de.ts 'EDI Created time',
+de2.ts 'Transmission Time',
+de3.ts 'Ack Time'
 --, de.event_id, de.mid, de.envid, dd.reference, dd.timestamp 
 from eistest.eis_tb_DTSDocuments dd 
   inner join
@@ -54,7 +55,9 @@ on ddt.doctype = dd.type
 left join eistest.eis_tb_dtsevents de2
 on (de.envid = de2.envid and de2.event = 6)
 left join eistest.eis_tb_dtsevents de3
-on (de.envid = de3.envid and de3.event = 20)
+on (de.envid = de3.envid and de3.event = 20) 
+  where  
+ dd.type in ( '810', '856', '849', '812')   and de.event = 8 and ps.tpid = ?
             """;
 
     @Autowired
@@ -84,7 +87,7 @@ on (de.envid = de3.envid and de3.event = 20)
             }
             else 
             {
-                List<Map<String,Object>> outBoundList = jdbcTemplate.queryForList(outBoundQuery);
+                List<Map<String,Object>> outBoundList = jdbcTemplate.queryForList(outBoundQuery,new Object[]{clientTpid});
 
                 if(outBoundList != null && !outBoundList.isEmpty())
                 {

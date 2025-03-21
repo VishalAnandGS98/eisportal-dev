@@ -14,9 +14,15 @@ import eis.edi.api.eisportal.dto.GetClientResponse;
 public class GetClientServiceImpl implements GetClientService{
 
     String clientQuery = """
-            select record_id 'recordId',user_unique_id 'userUniqueId',client_tpid 'clientTpid'
-            from eistest.eis_tb_users_client
-            where user_unique_id = ?
+            select 
+a.record_id 'recordId',
+a.user_unique_id 'userUniqueId',
+a.client_tpid 'clientTpid',
+b.name 'clientName'
+from eistest.eis_tb_users_client  a,
+eistest.eis_tb_partners b
+where a.client_tpid = b.tpid
+and user_unique_id = ?
             """;
 
     @Autowired
